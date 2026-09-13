@@ -1,6 +1,7 @@
 pipeline {
     agent any
     environment {
+        // Pull the secure Docker Hub credentials we saved in Jenkins
         DOCKER_CREDS = credentials('docker-hub-creds')
     }
     stages {
@@ -20,6 +21,7 @@ pipeline {
         }
         stage('Push Image') {
             steps {
+                // Log into Docker Hub securely using the plugin variables
                 sh 'echo $DOCKER_CREDS_PSW | docker login -u $DOCKER_CREDS_USR --password-stdin'
                 script {
                     def commitSha = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
@@ -50,6 +52,7 @@ pipeline {
     }
     post {
         always {
+            // Security best practice: Always clean up authentication
             sh 'docker logout'
         }
     }
