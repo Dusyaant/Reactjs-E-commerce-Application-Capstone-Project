@@ -4,13 +4,21 @@ pipeline {
         // Pull the secure Docker Hub credentials we saved in Jenkins
         DOCKER_CREDS = credentials('docker-hub-creds')
     }
-    stages {
-        stage('Build Image') {
-            steps {
-                sh 'chmod +x build.sh'
-                sh './build.sh'
+   stages {
+    stage('Build Image') {
+        steps {
+            script {
+                def commitSha = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'main') {
+                    sh "docker build -t ${DOCKER_CREDS_USR}/devops-app-prod:${commitSha} ."
+                    sh "docker tag ${DOCKER_CREDS_USR}/devops-app-prod:${commitSha} ${DOCKER_CREDS_USR}/devops-app-prod:latest"
+                } else {
+                    sh "docker build -t ${DOCKER_CREDS_USR}/devops-app-dev:${commitSha} ."
+                    sh "docker tag ${DOCKER_CREDS_USR}/devops-app-dev:${commitSha} ${DOCKER_CREDS_USR}/devops-app-dev:latest"
+                }
             }
         }
+    }
         stage('Push Image') {
             steps {
                 // Log into Docker Hub securely
