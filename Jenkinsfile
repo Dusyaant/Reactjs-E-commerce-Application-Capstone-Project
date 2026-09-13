@@ -4,7 +4,11 @@ pipeline {
         // Pull the secure Docker Hub credentials we saved in Jenkins
         DOCKER_CREDS = credentials('docker-hub-creds')
     }
+<<<<<<< HEAD
     stages {
+=======
+   stages {
+>>>>>>> origin/master
     stage('Build Image') {
         steps {
             script {
