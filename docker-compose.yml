@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  webapp:
+    # We use a variable so our deploy script can inject the exact image tag
+    image: ${DOCKER_IMAGE:-devops-app:latest}
+    container_name: devops-webapp
+    ports:
+      - "80:80"
+    restart: always
