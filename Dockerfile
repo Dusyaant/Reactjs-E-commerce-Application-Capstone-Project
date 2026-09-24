@@ -1,14 +1,18 @@
-# Use the lightweight Nginx image
+# Stage 1: Build the React application
+FROM node:18-alpine as build
+WORKDIR /app
+# Copy package files and install dependencies
+COPY package*.json ./
+RUN npm install
+# Copy the rest of the source code and build the app
+COPY . .
+RUN npm run build
+
+# Stage 2: Serve the application with Nginx
 FROM nginx:alpine
-
-# Remove the default Nginx index page
+# Remove default Nginx static assets
 RUN rm -rf /usr/share/nginx/html/*
-
-# Copy our project files into the Nginx web directory
-COPY . /usr/share/nginx/html/
-
-# Expose port 80 for web traffic
+# Copy the compiled React build from Stage 1 to Nginx
+COPY --from=build /app/build /usr/share/nginx/html
 EXPOSE 80
-
-# Command to run Nginx in the foreground
 CMD ["nginx", "-g", "daemon off;"]
