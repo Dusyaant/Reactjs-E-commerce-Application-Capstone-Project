@@ -4,5 +4,5 @@ services:
     image: dusyaant/prod:latest
     container_name: devops-webapp-prod
     ports:
-      - "8080:80"
+      - "8081:80"
     restart: always
