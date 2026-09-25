@@ -60,13 +60,13 @@ The pipeline enforces strict environment separation between development and prod
 1. **Development (`dev` branch):**
 * Pushing code to `dev` fires a GitHub Webhook to Jenkins (`:8080/github-webhook/`).
 * Jenkins builds the Docker image and pushes it to the **public** repository: `dusyaant/dev:latest`.
-* Docker Compose deploys the container (`devops-webapp-dev`) bound to **Port 80** (`http://<EC2-IP>:80`).
+* Docker Compose deploys the container (`devops-webapp-dev`) bound to **Port 80** (`http://54.208.241.183:80`).
 
 
 2. **Production (`master` branch):**
 * Merging or pushing to `master` triggers the production pipeline.
 * Jenkins authenticates and pushes the image to the **private** repository: `dusyaant/prod:latest`.
-* Docker Compose deploys the production container (`devops-webapp-prod`) bound to **Port 8081** (`http://<EC2-IP>:8081`).
+* Docker Compose deploys the production container (`devops-webapp-prod`) bound to **Port 8081** (`http://54.208.241.183:8081`).
 
 
 
