@@ -1,153 +1,139 @@
-Here's a clean, professional README for your repo — just copy the whole block and paste it in as `README.md`. I filled in the pieces I could confirm from the repo (React app, Dockerized, Jenkins CI/CD pipeline, deployed via docker-compose), and left a few bracketed placeholders for things only you'd know (live demo link, exact feature list, your name/contact).
+# End-to-End CI/CD Pipeline & AWS Monitoring for React E-Commerce Application
 
-```markdown
-<div align="center">
-
-# 🛒 Reactjs E-commerce Application
-
-### Capstone Project — A modern, containerized e-commerce web app built with React
-
-[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
-[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-[![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white)](https://www.jenkins.io/)
-
-[Live Demo](#) · [Report Bug](../../issues) · [Request Feature](../../issues)
-
-</div>
+**Author:** Dusyaant R  
+**Project Type:** DevOps Capstone Project  
 
 ---
 
-## 📖 About The Project
+## 📌 Project Overview
+This project implements a fully automated, containerized **Continuous Integration and Continuous Deployment (CI/CD)** pipeline for a React.js E-Commerce web application hosted on **AWS EC2**. 
 
-This is a **ReactJS-based E-commerce web application** built as a capstone project. It demonstrates a full end-to-end workflow — from frontend development to containerization and CI/CD deployment — bringing together modern frontend engineering with real-world DevOps practices.
-
-> Replace this paragraph with 2–3 sentences on what the app actually lets users do (browse products, add to cart, checkout, etc.) so it reads like a real product pitch.
-
-<div align="center">
-  <img src="./screenshot/screenshot.png" alt="App Screenshot" width="80%">
-</div>
+Using a **Jenkins Multibranch Pipeline** integrated with **GitHub Webhooks**, code commits to the `dev` and `master` branches automatically trigger isolated Docker image builds, push artifacts to **Docker Hub** (Public and Private repositories), and deploy zero-conflicting containers via **Docker Compose** and **Nginx**. Production availability is continuously monitored using an AWS-native observability stack (**Amazon Route 53**, **Amazon CloudWatch**, and **Amazon SNS**).
 
 ---
 
-## ✨ Features
+## 🛠️ Technology Stack & Architecture
 
-- 🛍️ Product listing & browsing
-- 🛒 Add to cart / cart management
-- 📱 Responsive UI
-- 🐳 Fully containerized with Docker
-- ⚙️ Automated build & deploy pipeline via Jenkins
-
-> Update this list to match what's actually implemented — trim anything not built yet, add anything I missed.
-
----
-
-## 🛠️ Tech Stack
-
-| Layer            | Technology        |
-|-------------------|--------------------|
-| Frontend          | React.js           |
-| Containerization  | Docker             |
-| CI/CD             | Jenkins            |
-| Orchestration     | Docker Compose      |
+| Category | Technology / Service | Purpose |
+| :--- | :--- | :--- |
+| **Frontend Application** | React.js (SPA) | Client-side e-commerce storefront and authentication UI |
+| **Web Server** | Nginx (`nginx:alpine`) | Lightweight static asset serving & SPA routing |
+| **Containerization** | Docker & Docker Compose | Image packaging, environment isolation, and port binding |
+| **Image Registry** | Docker Hub | `dusyaant/dev` (Public) and `dusyaant/prod` (Private) |
+| **CI/CD Automation** | Jenkins & GitHub Webhooks | Automated multibranch build, push, and deployment |
+| **Cloud Compute** | AWS EC2 (`t3.micro`) | Host infrastructure running Jenkins and Docker Engine |
+| **Monitoring & Alerting** | AWS Route 53, CloudWatch, SNS | Endpoint health probing, metric evaluation, and email incident alerts |
 
 ---
 
-## 🚀 Getting Started
+## 📂 Repository Structure
 
-### Prerequisites
+```text
+├── .dockerignore                  # Excludes unnecessary files from Docker build context
+├── .gitignore                     # Excludes node_modules, logs, and IDE configs
+├── Dockerfile                     # Packages compiled React build into Nginx Alpine container
+├── docker-compose.yml             # Defines service, container name, port mapping, and restart policy
+├── Jenkinsfile                    # Declarative pipeline for build, Docker Hub push, and deployment
+├── build.sh                       # Shell script to build the Docker image
+├── deploy.sh                      # Shell script to deploy containers via Docker Compose
+├── build/                         # Compiled static production assets (HTML, CSS, JS chunks)
+└── screenshot/                    # Categorized verification evidence of pipeline & AWS stack
+    ├── Automation Trigger/
+    ├── CICD Server & Pipelines/
+    ├── Container Registry/
+    ├── Health Monitoring & Incident Alerting/
+    ├── Infrastructure & Hosting/
+    └── Live Application Verification/
 
-- [Node.js](https://nodejs.org/) & npm
-- [Docker](https://www.docker.com/) (optional, for containerized run)
-
-### Local Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/Dusyaant/Reactjs-E-commerce-Application-Capstone-Project.git
-cd Reactjs-E-commerce-Application-Capstone-Project
-
-# Install dependencies
-npm install
-
-# Start the development server
-npm start
-```
-
-The app will be available at `http://localhost:3000`.
-
-### Run with Docker
-
-```bash
-# Build the Docker image
-docker build -t reactjs-ecommerce .
-
-# Run the container
-docker run -d -p 80:80 reactjs-ecommerce
-```
-
-Or, using Docker Compose:
-
-```bash
-docker-compose up -d
-```
-
-The app will be available at `http://localhost`.
-
----
-
-## ⚙️ CI/CD Pipeline
-
-This project includes a `Jenkinsfile` that automates the build and deployment process:
-
-1. **Build** — installs dependencies and builds the production React bundle
-2. **Dockerize** — packages the build into a Docker image
-3. **Deploy** — pushes the image and deploys the container via `deploy.sh`
-
-> Add a short note here on what triggers the pipeline (push to `dev`, manual trigger, etc.) if you want it fully accurate.
-
----
-
-## 📂 Project Structure
-
-```
-├── build/              # Production build output
-├── screenshot/         # App screenshots
-├── Dockerfile          # Container image definition
-├── Jenkinsfile         # CI/CD pipeline definition
-├── docker-compose.yml  # Container orchestration
-├── build.sh            # Build automation script
-└── deploy.sh           # Deployment automation script
 ```
 
 ---
 
-## 🤝 Contributing
+## 🚀 Multi-Branch CI/CD Workflow
 
-Contributions are welcome! Feel free to open an issue or submit a pull request.
+The pipeline enforces strict environment separation between development and production branches:
 
-1. Fork the repo
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. **Development (`dev` branch):**
+* Pushing code to `dev` fires a GitHub Webhook to Jenkins (`:8080/github-webhook/`).
+* Jenkins builds the Docker image and pushes it to the **public** repository: `dusyaant/dev:latest`.
+* Docker Compose deploys the container (`devops-webapp-dev`) bound to **Port 80** (`http://<EC2-IP>:80`).
 
----
 
-## 📄 License
+2. **Production (`master` branch):**
+* Merging or pushing to `master` triggers the production pipeline.
+* Jenkins authenticates and pushes the image to the **private** repository: `dusyaant/prod:latest`.
+* Docker Compose deploys the production container (`devops-webapp-prod`) bound to **Port 8081** (`http://<EC2-IP>:8081`).
 
-Distributed under the MIT License. See `LICENSE` for more information.
 
-## 👤 Author
-
-**Dusyaant**
-
-- GitHub: [@Dusyaant](https://github.com/Dusyaant)
 
 ---
 
-<div align="center">
-  <sub>Built with ❤️ as part of a DevOps/CSE capstone project</sub>
-</div>
-```
+## 🛡️ Security & Reliability Practices
 
-A few things worth swapping in before you paste it: the live demo link, an actual screenshot in `/screenshot`, and the feature/tech-stack details I flagged with placeholders — the repo's public page doesn't show me `src/` contents, so I couldn't confirm exact features (auth, payment, cart persistence, etc.).
+* **Registry Access Control:** Production images are stored in a private Docker Hub repository (`dusyaant/prod`), while development images remain public (`dusyaant/dev`).
+* **Service Port Isolation:** Host ports are isolated across services—Port `80` (Dev App), Port `8081` (Prod App), and Port `8080` (Jenkins Controller).
+* **Self-Healing Containers:** Configured `restart: always` in `docker-compose.yml` so containers automatically recover from unexpected process crashes or EC2 reboots.
+* **Automated Incident Alerting:** AWS Route 53 probes the application every 30 seconds (with a 3-failure threshold). If `HealthCheckStatus` drops below `1`, CloudWatch triggers an Amazon SNS topic (`App-Health-Alerts`) to dispatch an immediate email alert.
+
+---
+
+## 📸 Project Verification & Evidence
+
+### 1. Infrastructure & Hosting (AWS EC2)
+
+**AWS EC2 `t3.micro` Instance Running (`3/3` Status Checks Passed):**
+
+
+### 2. Automation Trigger (GitHub Webhooks)
+
+**Active GitHub Webhook Delivering Push Events to Jenkins:**
+
+
+### 3. CI/CD Server & Multibranch Pipelines (Jenkins)
+
+**Jenkins Main Dashboard:**
+
+
+**Multibranch Pipeline Overview (`dev` and `master` Passing):**
+
+
+**Automated Push Trigger on `dev` Branch (Build #14):**
+
+
+**Production `master` Branch Build Success (Build #22):**
+
+
+### 4. Container Registry (Docker Hub)
+
+**Updated Public (`dev`) and Private (`prod`) Repositories on Docker Hub:**
+
+
+### 5. Live Application Verification
+
+**Development Environment Storefront (Port 80):**
+
+
+**Development Environment Login Route (Port 80):**
+
+
+**Production Environment Storefront (Port 8081):**
+
+
+**Production Environment Login Route (Port 8081):**
+
+
+### 6. Health Monitoring & Incident Alerting (AWS Route 53, CloudWatch & SNS)
+
+**Route 53 Health Check Overview & Status:**
+
+
+**Route 53 Endpoint Configuration:**
+
+
+**Route 53 Health Check Metrics (100% Healthy):**
+
+
+**CloudWatch Alarm Monitoring `HealthCheckStatus` (`OK` State):**
+
+
+**Confirmed Amazon SNS Topic & Email Subscription (`App-Health-Alerts`):**
