@@ -58,7 +58,7 @@ Using a **Jenkins Multibranch Pipeline** integrated with **GitHub Webhooks**, co
 The pipeline enforces strict environment separation between development and production branches:
 
 1. **Development (`dev` branch):**
-* Pushing code to `dev` fires a GitHub Webhook to Jenkins (`:8080/github-webhook/`).
+* Pushing code to `dev` fires a GitHub Webhook to Jenkins (`http://54.208.241.183:8080/github-webhook/`).
 * Jenkins builds the Docker image and pushes it to the **public** repository: `dusyaant/dev:latest`.
 * Docker Compose deploys the container (`devops-webapp-dev`) bound to **Port 80** (`http://54.208.241.183:80`).
 
